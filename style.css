@@ -318,6 +318,14 @@ h5 {
 }
 
 
+.input-group input[type="number"].input-error,
+.input-group-inline input[type="number"].input-error {
+    border-color: var(--danger-color);
+    background-color: #fff4f4;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.10);
+}
+
+
 .input-group-inline > div {
     display: flex;
 
