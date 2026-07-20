@@ -1,0 +1,424 @@
+:root {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #667085;
+    --border: #d9dee7;
+    --soft: #eef2f6;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+}
+
+
+.container {
+    width: min(1500px, 96%);
+    margin: 0 auto;
+    padding: 1rem 0 2rem;
+}
+
+
+header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+
+header h1 {
+    margin-bottom: 0.25rem;
+}
+
+
+.subtitle {
+    margin-top: 0;
+    color: var(--muted);
+}
+
+
+.card,
+.info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+}
+
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
+button {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 0.55rem 0.8rem;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background: var(--soft);
+}
+
+
+.grid-container {
+    display: grid;
+    gap: 1rem 2rem;
+}
+
+
+.config-top-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+
+.config-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+.water-temp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+
+.advanced-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+.input-group,
+.input-group-inline {
+    margin-bottom: 0.8rem;
+}
+
+
+.input-group label,
+.input-group-inline label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+
+input[type="number"] {
+    width: 100%;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #ffffff;
+}
+
+
+.input-group-inline > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+}
+
+
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 400;
+}
+
+
+.inset-radio-group {
+    padding: 0.5rem;
+    background: var(--soft);
+    border-radius: 6px;
+}
+
+
+.calculated-rh-display {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+.advanced-settings {
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+}
+
+
+.advanced-settings summary,
+.info-box summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+
+.process-overview {
+    padding: 0.75rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+}
+
+
+.process-ok {
+    background: #eef8f0;
+}
+
+
+.process-warning {
+    background: #fff4e5;
+}
+
+
+.overview-limitations {
+    margin-top: 0.4rem;
+}
+
+
+.process-flow-container {
+    display: grid;
+
+    grid-template-columns:
+        minmax(160px, 1fr)
+        auto
+        minmax(180px, 1fr)
+        auto
+        minmax(180px, 1fr)
+        auto
+        minmax(180px, 1fr)
+        auto
+        minmax(180px, 1fr);
+
+    gap: 0.6rem;
+    align-items: start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+
+.process-column {
+    min-width: 170px;
+}
+
+
+.arrow {
+    align-self: center;
+    font-size: 1.8rem;
+    color: var(--muted);
+    padding-top: 2.5rem;
+}
+
+
+.state-node,
+.component-node {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.8rem;
+    background: #ffffff;
+}
+
+
+.state-node {
+    margin-top: 0.65rem;
+}
+
+
+.state-node h4,
+.component-node h5 {
+    margin: 0 0 0.45rem;
+}
+
+
+.state-node p,
+.component-node p {
+    margin: 0.2rem 0;
+}
+
+
+.component-node.inactive {
+    border-color: var(--border);
+    background: #fafafa;
+}
+
+
+.component-node.active-heating,
+.state-node.color-red {
+    border-color: #d92d20;
+}
+
+
+.component-node.active-cooling,
+.state-node.color-blue {
+    border-color: #1570ef;
+}
+
+
+.state-node.color-source {
+    border-color: #98a2b3;
+}
+
+
+.component-node.unavailable {
+    border-style: dashed;
+}
+
+
+.status-line {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+
+.final-state {
+    background: #fcfcfd;
+}
+
+
+.target-line {
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem !important;
+    padding-top: 0.45rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+
+.operating-hints {
+    margin-top: 1rem;
+}
+
+
+.hint-row {
+    padding: 0.65rem 0.8rem;
+    margin-top: 0.5rem;
+    background: #f8fafc;
+    border-left: 4px solid #98a2b3;
+    border-radius: 6px;
+}
+
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+
+.power-summary,
+.comparison-summary,
+.assessment-summary {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem;
+    background: #fcfcfd;
+}
+
+
+.power-summary h4,
+.comparison-summary h4,
+.assessment-summary h4 {
+    margin-top: 0;
+}
+
+
+.power-summary p,
+.comparison-summary p {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
+.power-heat {
+    color: #b42318;
+}
+
+
+.power-cool {
+    color: #175cd3;
+}
+
+
+.assessment-ok {
+    color: #067647;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+
+.assessment-warning {
+    color: #b54708;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+
+.info-content {
+    margin-top: 1rem;
+}
+
+
+.info-content h4 {
+    margin-bottom: 0.35rem;
+}
+
+
+.info-content ul {
+    margin-top: 0.35rem;
+}
+
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 1rem 0;
+}
+
+
+@media (max-width: 1100px) {
+
+    .config-grid,
+    .advanced-grid,
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .config-top-grid,
+    .water-temp-grid {
+        grid-template-columns: 1fr;
+    }
+}
