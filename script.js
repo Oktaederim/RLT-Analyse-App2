@@ -2460,6 +2460,69 @@ function updateUI(
 
     setText(
 
+        "summary-h-outside",
+
+        `${f(
+            result.states[0].h,
+            2
+        )} kJ/kg`
+
+    );
+
+
+    setText(
+
+        "summary-h-supply",
+
+        `${f(
+            result.finalState.h,
+            2
+        )} kJ/kg`
+
+    );
+
+
+    const deltaH =
+        result.finalState.h -
+        result.states[0].h;
+
+
+    setText(
+
+        "summary-delta-h",
+
+        `${signed(
+            deltaH,
+            2
+        )} kJ/kg`
+
+    );
+
+
+    const energyDirection =
+
+        Math.abs(deltaH) < 0.01
+
+            ? "nahezu unverändert"
+
+            : deltaH > 0
+
+                ? "Energiezufuhr zur Luft"
+
+                : "Energieabfuhr aus der Luft";
+
+
+    setText(
+
+        "summary-energy-direction",
+
+        energyDirection
+
+    );
+
+
+    setText(
+
         "summary-delta-t",
 
         `${signed(
