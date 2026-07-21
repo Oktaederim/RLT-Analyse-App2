@@ -1160,14 +1160,6 @@ function simulateProcess(
 
         if (
             inputs.heizkonzept === "ve_hauptleistung" &&
-            previousCooling
-        ) {
-            limitations.push(
-                "Nacherwärmung wäre erforderlich, ist in der gewählten Anlagenkonfiguration jedoch nicht verfügbar."
-            );
-            s3 = { ...s2 };
-        } else if (
-            inputs.heizkonzept === "ve_hauptleistung" &&
             !previousCooling
         ) {
             const heated = heatState(s2, target.T);
@@ -1182,6 +1174,11 @@ function simulateProcess(
                 s3 = { ...s2 };
             }
         } else {
+            /* Der Nacherhitzer liegt hinter dem Kühler und steht
+               deshalb auch beim Heizkonzept "VE als Haupterhitzer"
+               für die Nacherwärmung nach Kühlung/Entfeuchtung zur
+               Verfügung. Die Konzeptwahl legt nur fest, welches
+               Register einen reinen Heizfall übernimmt. */
             s3 = heatState(s2, target.T);
 
             if (s3.T > s2.T + EPS_T) {
