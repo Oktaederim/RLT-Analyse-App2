@@ -16,36 +16,36 @@ document.addEventListener("DOMContentLoaded", () => {
                     toggleUI();
                 }
 
-                berechnen();
+                calculate();
             }
         );
     });
 
-    dokumentieren
+    document
         .getElementById("resetBtn")
         .addEventListener("click", resetAll);
 
     toggleUI();
-    berechnen();
+    calculate();
 });
 
 
-const defaultValues ​​= {
+const defaultValues = {
 
-    tempAußen: 20.0,
-    rhAußen: 50,0,
+    tempAussen: 20.0,
+    rhAussen: 50.0,
 
     tempZuluft: 20.0,
-    rhZuluft: 60,0,
+    rhZuluft: 60.0,
     xZuluft: 7.0,
 
-    Volumenstrom: 5000,
-    Druck: 1013.25,
+    volumenstrom: 5000,
+    druck: 1013.25,
 
     tempVEZiel: 5.0,
 
     tempHeizVorlauf: 70,
-    tempHeizRücklauf: 50,
+    tempHeizRuecklauf: 50,
 
     tempKuehlVorlauf: 8,
     tempKuehlRuecklauf: 13,
@@ -53,11 +53,11 @@ const defaultValues ​​= {
     maxZuluftRh: 70,
     taupunktReserve: 2,
 
-    kuehlAnsatz: 2,
-    Heizansatz: 3,
+    kuehlApproach: 2,
+    heizApproach: 3,
 
-    Betriebsmodus: "entfeuchten",
-    Heizkonzept: "Standard",
+    betriebsmodus: "entfeuchten",
+    heizkonzept: "standard",
     regelungsart: "trh"
 };
 
@@ -73,9 +73,9 @@ function resetAll() {
 
             element.value = value;
 
-        } anders {
+        } else {
 
-            Konstante Radio =
+            const radio =
                 document.querySelector(
                     `input[name="${key}"][value="${value}"]`
                 );
@@ -96,7 +96,7 @@ function resetAll() {
     }
 
     toggleUI();
-    berechnen();
+    calculate();
 }
 
 
@@ -105,65 +105,65 @@ function toggleUI() {
     const heizkonzept =
         document.querySelector(
             'input[name="heizkonzept"]:checked'
-        ).Wert;
+        ).value;
 
     const regelungsart =
         document.querySelector(
             'input[name="regelungsart"]:checked'
-        ).Wert;
+        ).value;
 
     const betriebsmodus =
         document.querySelector(
             'input[name="betriebsmodus"]:checked'
-        ).Wert;
+        ).value;
 
 
-    dokumentieren
+    document
         .getElementById("kuehlwasserWrapper")
         .classList.toggle(
-            "versteckt",
-            Betriebsmodus === "heizen"
+            "hidden",
+            betriebsmodus === "heizen"
         );
 
 
-    dokumentieren
+    document
         .getElementById("zuluft-trh-wrapper")
         .classList.toggle(
-            "versteckt",
+            "hidden",
             regelungsart !== "trh"
         );
 
 
-    dokumentieren
+    document
         .getElementById("zuluft-x-wrapper")
         .classList.toggle(
-            "versteckt",
+            "hidden",
             regelungsart !== "x"
         );
 
 
-    dokumentieren
+    document
         .getElementById("veZielTempWrapper")
         .classList.toggle(
-            "versteckt",
-            Heizkonzept !== "Standard"
+            "hidden",
+            heizkonzept !== "standard"
         );
 }
 
 
 /* =====================================================
    PSYCHROMETRISCHE GRUNDFUNKTIONEN
-   ======================================================= */
+   ===================================================== */
 
 const clamp = (
-    Wert,
+    value,
     min,
     max
 ) => Math.min(
     max,
     Math.max(
         min,
-        Wert
+        value
     )
 );
 
@@ -174,11 +174,11 @@ const getSVP = T =>
 
     Math.exp(
         (
-            17,62 *
+            17.62 *
             T
         ) /
         (
-            243,12 +
+            243.12 +
             T
         )
     );
@@ -187,11 +187,11 @@ const getSVP = T =>
 const getAbsFeuchte = (
     T,
     rh,
-    P
+    p
 ) => {
 
-    Konstante pv =
-        Klemme(
+    const pv =
+        clamp(
             rh,
             0,
             100
@@ -199,44 +199,44 @@ const getAbsFeuchte = (
         100 *
         getSVP(T);
 
-    zurückkehren (
+    return (
         622 *
-        PV
+        pv
     ) /
     Math.max(
-        0,001,
-        P -
-        PV
+        0.001,
+        p -
+        pv
     );
 };
 
 
 const getRelFeuchte = (
     T,
-    X,
-    P
+    x,
+    p
 ) => {
 
     const svp =
         getSVP(T);
 
-    Wenn (
+    if (
         svp <= 0
     ) {
-        Rückgabewert: 0;
+        return 0;
     }
 
-    Rückholklemme
+    return clamp(
 
         (
-            X *
-            P
+            x *
+            p
         ) /
         (
             svp *
             (
                 622 +
-                X
+                x
             )
         ) *
         100,
@@ -249,23 +249,23 @@ const getRelFeuchte = (
 
 const getEnthalpie = (
     T,
-    X
+    x
 ) => {
 
-    zurückkehren (
+    return (
 
-        1,006 *
+        1.006 *
         T
 
         +
 
         (
-            X /
+            x /
             1000
         ) *
         (
             2501 +
-            1,86 *
+            1.86 *
             T
         )
     );
@@ -277,10 +277,10 @@ const getTaupunkt = (
     rh
 ) => {
 
-    Wenn (
+    if (
         rh <= 0
     ) {
-        Rückgabewert -273,15;
+        return -273.15;
     }
 
     const a = 17.62;
@@ -289,9 +289,9 @@ const getTaupunkt = (
     const alpha =
 
         Math.log(
-            Klemme(
+            clamp(
                 rh,
-                0,0001,
+                0.0001,
                 100
             ) /
             100
@@ -300,7 +300,7 @@ const getTaupunkt = (
         +
 
         (
-            A *
+            a *
             T
         ) /
         (
@@ -308,13 +308,13 @@ const getTaupunkt = (
             T
         );
 
-    zurückkehren (
-        B *
-        Alpha
+    return (
+        b *
+        alpha
     ) /
     (
-        A -
-        Alpha
+        a -
+        alpha
     );
 };
 
@@ -322,20 +322,20 @@ const getTaupunkt = (
 const getDichte = (
     T,
     rh,
-    P
+    p
 ) => {
 
     const pPa =
-        P *
+        p *
         100;
 
     const TK =
         T +
-        273,15;
+        273.15;
 
-    Konstante pv =
+    const pv =
 
-        Klemme(
+        clamp(
             rh,
             0,
             100
@@ -346,11 +346,11 @@ const getDichte = (
 
         100;
 
-    zurückkehren (
+    return (
 
         (
             pPa -
-            PV
+            pv
         ) /
         (
             287.058 *
@@ -359,9 +359,9 @@ const getDichte = (
 
         +
 
-        PV /
+        pv /
         (
-            461,52 *
+            461.52 *
             TK
         )
     );
@@ -373,49 +373,49 @@ const getDichte = (
     für einen gegebenen Feuchtegehalt x.
 */
 const getSaturationTempForX = (
-    X,
-    P
+    x,
+    p
 ) => {
 
     let low = -50;
     let high = 60;
 
-    für (
-        sei i = 0;
+    for (
+        let i = 0;
         i < 80;
         i++
     ) {
 
-        Konstante Mitte =
+        const mid =
             (
-                niedrig +
-                hoch
+                low +
+                high
             ) /
             2;
 
         const xSat =
             getAbsFeuchte(
-                Mitte
+                mid,
                 100,
-                P
+                p
             );
 
-        Wenn (
+        if (
             xSat <
-            X
+            x
         ) {
 
-            niedrig = mittel;
+            low = mid;
 
-        } anders {
+        } else {
 
-            hoch = mittel;
+            high = mid;
         }
     }
 
-    zurückkehren (
-        niedrig +
-        hoch
+    return (
+        low +
+        high
     ) /
     2;
 };
@@ -424,57 +424,57 @@ const getSaturationTempForX = (
 /*
     Ermittelt die notwendige Temperatur,
     damit bei gegebenem x eine gewünschte
-    Maximale relative Feuchte wird eingehalten.
+    maximale relative Feuchte eingehalten wird.
 */
 const getTempForRhAtX = (
-    X,
-    Ziel-Rh,
-    P
+    x,
+    targetRh,
+    p
 ) => {
 
     let low = -50;
     let high = 80;
 
-    für (
-        sei i = 0;
+    for (
+        let i = 0;
         i < 80;
         i++
     ) {
 
-        Konstante Mitte =
+        const mid =
             (
-                niedrig +
-                hoch
+                low +
+                high
             ) /
             2;
 
         const rh =
             getRelFeuchte(
-                Mitte
-                X,
-                P
+                mid,
+                x,
+                p
             );
 
         /*
             Mit steigender Temperatur sinkt
             bei konstantem x die relative Feuchte.
         */
-        Wenn (
+        if (
             rh >
-            Ziel-Rh
+            targetRh
         ) {
 
-            niedrig = mittel;
+            low = mid;
 
-        } anders {
+        } else {
 
-            hoch = mittel;
+            high = mid;
         }
     }
 
-    zurückkehren (
-        niedrig +
-        hoch
+    return (
+        low +
+        high
     ) /
     2;
 };
@@ -484,16 +484,16 @@ const createZustand = (
     T,
     rh,
     xVal,
-    P
+    p
 ) => {
 
     const zustand = {
         T,
-        P
+        p
     };
 
 
-    Wenn (
+    if (
         xVal !== null &&
         Number.isFinite(
             xVal
@@ -510,13 +510,13 @@ const createZustand = (
             getRelFeuchte(
                 T,
                 zustand.x,
-                P
+                p
             );
 
-    } anders {
+    } else {
 
         zustand.rh =
-            Klemme(
+            clamp(
                 rh,
                 0,
                 100
@@ -526,7 +526,7 @@ const createZustand = (
             getAbsFeuchte(
                 T,
                 zustand.rh,
-                P
+                p
             );
     }
 
@@ -549,42 +549,42 @@ const createZustand = (
         getDichte(
             zustand.T,
             zustand.rh,
-            P
+            p
         );
 
 
-    Rückgabezustand;
+    return zustand;
 };
 
 
-Funktion readNumber(
-    Ausweis,
-    Fallback = 0
+function readNumber(
+    id,
+    fallback = 0
 ) {
 
     const element =
         document.getElementById(id);
 
     if (!element) {
-        Rückfalloption;
+        return fallback;
     }
 
-    Konstante Wert =
+    const value =
         parseFloat(
             element.value
         );
 
     return Number.isFinite(value)
-        ? Wert
-        : zurückgreifen;
+        ? value
+        : fallback;
 }
 
 
 /* =====================================================
    HAUPTBERECHNUNG
-   ======================================================= */
+   ===================================================== */
 
-Funktion calculate() {
+function calculate() {
 
     const kritischeOberflaecheElement =
         document.getElementById(
@@ -594,20 +594,20 @@ Funktion calculate() {
 
     const inputs = {
 
-        Betriebsmodus:
+        betriebsmodus:
             document.querySelector(
                 'input[name="betriebsmodus"]:checked'
-            ).Wert,
+            ).value,
 
-        Heizkonzept:
+        heizkonzept:
             document.querySelector(
                 'input[name="heizkonzept"]:checked'
-            ).Wert,
+            ).value,
 
         regelungsart:
             document.querySelector(
                 'input[name="regelungsart"]:checked'
-            ).Wert,
+            ).value,
 
 
         tAussen:
@@ -642,22 +642,22 @@ Funktion calculate() {
             ),
 
 
-        Volumenstrom:
+        volumenstrom:
             Math.max(
                 0,
                 readNumber(
-                    "Volumenstrom",
+                    "volumenstrom",
                     5000
                 )
             ),
 
 
-        Druck:
+        druck:
             Math.max(
                 100,
                 readNumber(
-                    "Druck",
-                    1013,25
+                    "druck",
+                    1013.25
                 )
             ),
 
@@ -677,7 +677,7 @@ Funktion calculate() {
 
         tHeizR:
             readNumber(
-                "tempHeizRücklauf",
+                "tempHeizRuecklauf",
                 50
             ),
 
@@ -696,7 +696,7 @@ Funktion calculate() {
 
 
         maxZuluftRh:
-            Klemme(
+            clamp(
                 readNumber(
                     "maxZuluftRh",
                     70
@@ -716,7 +716,7 @@ Funktion calculate() {
             ),
 
 
-        kuehlAnsatz:
+        kuehlApproach:
             Math.max(
                 0,
                 readNumber(
@@ -726,11 +726,11 @@ Funktion calculate() {
             ),
 
 
-        Heizansatz:
+        heizApproach:
             Math.max(
                 0,
                 readNumber(
-                    "Heizansatz",
+                    "heizApproach",
                     3
                 )
             ),
@@ -740,21 +740,21 @@ Funktion calculate() {
 
             (
                 kritischeOberflaecheElement &&
-                kritisches OberflaecheElement
-                    .Wert
+                kritischeOberflaecheElement
+                    .value
                     .trim() !== ""
             )
 
                 ? parseFloat(
-                    kritisches OberflaecheElement
-                        .Wert
+                    kritischeOberflaecheElement
+                        .value
                 )
 
                 : null
     };
 
 
-    Konstante außerhalb =
+    const outside =
         createZustand(
             inputs.tAussen,
             inputs.rhAussen,
@@ -783,14 +783,14 @@ Funktion calculate() {
             );
 
 
-    Wenn (
+    if (
         inputs.regelungsart ===
-        "X"
+        "x"
     ) {
 
         const rhDisplay =
             document.getElementById(
-                "rh-Ergebnis"
+                "rh-ergebnis"
             );
 
         if (rhDisplay) {
@@ -803,31 +803,31 @@ Funktion calculate() {
 
     const result =
         simulateProcess(
-            draußen,
-            Ziel,
-            Eingaben
+            outside,
+            target,
+            inputs
         );
 
 
     updateInputValidation(
-        Ergebnis,
-        Eingaben
+        result,
+        inputs
     );
 
 
     updateUI(
-        Ergebnis,
-        Eingaben
+        result,
+        inputs
     );
 }
 
 
 function updateInputValidation(
-    Ergebnis,
-    Eingaben
+    result,
+    inputs
 ) {
     const setError = (
-        Ausweis,
+        id,
         hasError
     ) => {
         const element =
@@ -835,7 +835,7 @@ function updateInputValidation(
 
         if (element) {
             element.classList.toggle(
-                "Eingabefehler",
+                "input-error",
                 hasError
             );
 
@@ -852,7 +852,7 @@ function updateInputValidation(
     );
 
     setError(
-        "tempHeizRücklauf",
+        "tempHeizRuecklauf",
         !result.waterConfig.heatingValid
     );
 
@@ -862,12 +862,12 @@ function updateInputValidation(
 
     setError(
         "tempKuehlVorlauf",
-        Kühlungsfehler
+        coolingError
     );
 
     setError(
         "tempKuehlRuecklauf",
-        Kühlungsfehler
+        coolingError
     );
 }
 
@@ -876,14 +876,14 @@ function updateInputValidation(
    KORRIGIERTE PROZESSSIMULATION
 
    Der erreichbare Zustand wird durch Taupunkt sowie
-   Heiz- und Kühlwassertemperatur begrenzt. Unmögliche
-   Übersättige Luftzuströme werden nicht erzeugt.
-   ======================================================= */
+   Heiz- und Kuehlwassertemperatur begrenzt. Unmoegliche
+   uebersaettigte Luftzustaende werden nicht erzeugt.
+   ===================================================== */
 
-Funktion simulateProcess(
-    draußen,
-    Ziel,
-    Eingaben
+function simulateProcess(
+    outside,
+    target,
+    inputs
 ) {
     const EPS_T = 0.05;
     const EPS_X = 0.02;
@@ -893,13 +893,13 @@ Funktion simulateProcess(
     const limitations = [];
     const plausibility = [];
 
-    Konstante HeizungWasserGültig =
+    const heatingWaterValid =
         inputs.tHeizV > inputs.tHeizR;
 
     const coolingWaterValid =
         inputs.tKuehlR > inputs.tKuehlV;
 
-    Konstante maximaleHeizlufttemperatur =
+    const maxHeatingAirTemp =
         inputs.tHeizV - inputs.heizApproach;
 
     const minCoolingAirTemp =
@@ -914,34 +914,34 @@ Funktion simulateProcess(
             ) /
             (
                 287.058 *
-                (outside.T + 273,15)
+                (outside.T + 273.15)
             )
         );
 
-    Konstante mAir =
+    const mAir =
         inputs.volumenstrom * dryAirDensity / 3600;
 
     let s1 = { ...outside };
     let s2 = { ...outside };
     let s3 = { ...outside };
 
-    sei pVE = 0;
-    sei pK = 0;
-    sei pNE = 0;
-    Kondensat = 0;
+    let pVE = 0;
+    let pK = 0;
+    let pNE = 0;
+    let condensate = 0;
 
     if (!heatingWaterValid) {
         limitations.push(
-            „Unplausible Heizwassertemperaturen: Der Vorlauf muss wärmer als der Rücklauf sein. Vor- und Nacherhitzer werden nicht berücksichtigt.“
+            "Unplausible Heizwassertemperaturen: Der Vorlauf muss wärmer als der Rücklauf sein. Vor- und Nacherhitzer werden nicht berücksichtigt."
         );
     }
 
-    Wenn (
+    if (
         inputs.betriebsmodus !== "heizen" &&
         !coolingWaterValid
     ) {
         limitations.push(
-            „Unplausible Kühlwassertemperaturen: Der Rücklauf muss wärmer als der Vorlauf sein. Der Kühler wird nicht berücksichtigt.“
+            "Unplausible Kühlwassertemperaturen: Der Rücklauf muss wärmer als der Vorlauf sein. Der Kühler wird nicht berücksichtigt."
         );
     }
 
@@ -954,8 +954,8 @@ Funktion simulateProcess(
     };
 
     const heatState = (
-        Einlass,
-        gewünschte Temperatur
+        inlet,
+        desiredTemp
     ) => {
         if (!heatingWaterValid) {
             return { ...inlet };
@@ -965,8 +965,8 @@ Funktion simulateProcess(
 
         const achievableTemp =
             Math.min(
-                gewünschte Temperatur
-                maxHeizlufttemperatur
+                desiredTemp,
+                maxHeatingAirTemp
             );
 
         if (achievableTemp <= inlet.T + EPS_T) {
@@ -974,7 +974,7 @@ Funktion simulateProcess(
         }
 
         return createZustand(
-            erreichbareTemp,
+            achievableTemp,
             null,
             inlet.x,
             inputs.druck
@@ -982,9 +982,9 @@ Funktion simulateProcess(
     };
 
     const coolState = (
-        Einlass,
-        gewünschte Temperatur
-        Kondensation zulassen
+        inlet,
+        desiredTemp,
+        allowCondensation
     ) => {
         if (!coolingWaterValid) {
             return { ...inlet };
@@ -999,14 +999,14 @@ Funktion simulateProcess(
         let lowerLimit = minCoolingAirTemp;
 
         if (!allowCondensation) {
-            Untergrenze = Math.max(
-                Untergrenze,
-                Einlasstaupunkt
+            lowerLimit = Math.max(
+                lowerLimit,
+                inletDewPoint
             );
 
             if (desiredTemp < inletDewPoint - EPS_T) {
                 limitations.push(
-                    „Reine sinnvolle Kühlung ist nur bis zum Taupunkt von etwa ${inletDewPoint.toFixed(1)} °C möglich.“ Für ${desiredTemp.toFixed(1)} °C wäre Kühlung mit Kondensation und Entfeuchtung erforderlich.`
+                    `Reine sensible Kühlung ist nur bis zum Taupunkt von etwa ${inletDewPoint.toFixed(1)} °C möglich. Für ${desiredTemp.toFixed(1)} °C wäre Kühlung mit Kondensation und Entfeuchtung erforderlich.`
                 );
             }
         }
@@ -1019,52 +1019,52 @@ Funktion simulateProcess(
 
         const achievableTemp =
             Math.max(
-                gewünschte Temperatur
-                Untergrenze
+                desiredTemp,
+                lowerLimit
             );
 
         if (achievableTemp >= inlet.T - EPS_T) {
             limitations.push(
-                „Mit dem eingegebenen Kühlwasserniveau ist keine wirksame Abkühlung des aktuellen Luftzustands möglich.“
+                "Mit dem eingegebenen Kühlwasserniveau ist keine wirksame Abkühlung des aktuellen Luftzustands möglich."
             );
             return { ...inlet };
         }
 
         const xSaturation =
             getAbsFeuchte(
-                erreichbareTemp,
+                achievableTemp,
                 100,
                 inputs.druck
             );
 
         const outletX =
-            Kondensation zulassen
+            allowCondensation
                 ? Math.min(inlet.x, xSaturation)
                 : inlet.x;
 
         return createZustand(
-            erreichbareTemp,
+            achievableTemp,
             null,
-            OutletX,
+            outletX,
             inputs.druck
         );
     };
 
-    /* Vorerhitzer für Frostschutz im Standardkonzept. */
-    Wenn (
+    /* Vorerhitzer fuer Frostschutz im Standardkonzept. */
+    if (
         inputs.heizkonzept === "standard" &&
         outside.T < inputs.tVEZiel - EPS_T
     ) {
-        konstant erhitzt =
-            Wärmezustand(
-                draußen,
+        const heated =
+            heatState(
+                outside,
                 inputs.tVEZiel
             );
 
         if (heated.T > outside.T + EPS_T) {
-            s1 = erhitzt;
+            s1 = heated;
             pVE = mAir * (s1.h - outside.h);
-            erforderlichProcess.push("Vorerwärmen/Frostschutz");
+            requiredProcess.push("Vorerwärmen/Frostschutz");
         }
     }
 
@@ -1075,7 +1075,7 @@ Funktion simulateProcess(
             s2 = coolState(
                 s1,
                 target.T,
-                WAHR
+                true
             );
 
             if (s2.T < s1.T - EPS_T) {
@@ -1088,15 +1088,15 @@ Funktion simulateProcess(
                     );
 
                     limitations.push(
-                        `Die geforderte Kühleraustrittstemperatur liegt unter dem Taupunkt der eintretenden Luft von etwa ${getSaturationTempForX(s1.x, inputs.druck).toFixed(1)} °C. Der Vorgang ist deshalb nicht mehr sinnvoll; es entsteht Kondensat und der Feuchtegehalt sinkt.`
+                        `Die angeforderte Kühleraustrittstemperatur liegt unter dem Taupunkt der eintretenden Luft von etwa ${getSaturationTempForX(s1.x, inputs.druck).toFixed(1)} °C. Der Vorgang ist deshalb nicht mehr rein sensibel; es entsteht Kondensat und der Feuchtegehalt sinkt.`
                     );
-                } anders {
-                    erforderlichProcess.push("Sensibel cool");
+                } else {
+                    requiredProcess.push("Sensibel kühlen");
                 }
             }
         }
     } else if (inputs.betriebsmodus === "entfeuchten") {
-        Konstante Entfeuchtungsbedarf =
+        const needDehum =
             s1.x > target.x + EPS_X;
 
         if (needDehum) {
@@ -1108,8 +1108,8 @@ Funktion simulateProcess(
 
             s2 = coolState(
                 s1,
-                erforderlicher Taupunkt
-                WAHR
+                requiredDewPoint,
+                true
             );
 
             if (s2.T < s1.T - EPS_T) {
@@ -1126,7 +1126,7 @@ Funktion simulateProcess(
             s2 = coolState(
                 s1,
                 target.T,
-                WAHR
+                true
             );
 
             if (s2.T < s1.T - EPS_T) {
@@ -1135,65 +1135,65 @@ Funktion simulateProcess(
 
                 if (s2.x < s1.x - EPS_CONDENSATION_X) {
                     requiredProcess.push("Entfeuchten");
-                } anders {
-                    erforderlichProcess.push("Sensibel cool");
+                } else {
+                    requiredProcess.push("Sensibel kühlen");
                 }
             }
         }
 
     } else if (outside.T > target.T + EPS_T) {
         limitations.push(
-            „Kühlung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar.“
+            "Kühlung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar."
         );
     }
 
     /* Kondensat immer aus der tatsächlichen Feuchteabnahme
-       Am Kühler bestimmen – unabhängig vom gewählten Modus. */
-    Kondensat =
+       am Kühler bestimmen – unabhängig vom gewählten Modus. */
+    condensate =
         mAir *
         Math.max(0, s1.x - s2.x) *
         3.6;
 
-    /* Heizen oder Nacherwärmen auf den erreichbaren Wert. */
+    /* Heizen oder Nacherwaermen auf den erreichbaren Wert. */
     if (s2.T < target.T - EPS_T) {
-        const previousCooling = pK < -0,01;
+        const previousCooling = pK < -0.01;
 
-        Wenn (
+        if (
             inputs.heizkonzept === "ve_hauptleistung" &&
-            vorherige Kühlung
+            previousCooling
         ) {
             limitations.push(
-                „Nacherwärmung wäre erforderlich, ist in der gewählten Anlagenkonfiguration jedoch nicht verfügbar.“
+                "Nacherwärmung wäre erforderlich, ist in der gewählten Anlagenkonfiguration jedoch nicht verfügbar."
             );
             s3 = { ...s2 };
         } else if (
             inputs.heizkonzept === "ve_hauptleistung" &&
             !previousCooling
         ) {
-            const heating = heatState(s2, target.T);
+            const heated = heatState(s2, target.T);
 
             if (heated.T > s2.T + EPS_T) {
-                s1 = erhitzt;
-                s2 = { ...erhitzt };
-                s3 = { ...erhitzt };
+                s1 = heated;
+                s2 = { ...heated };
+                s3 = { ...heated };
                 pVE = mAir * (heated.h - outside.h);
-                erforderlichProcess.push("Heizen");
-            } anders {
+                requiredProcess.push("Heizen");
+            } else {
                 s3 = { ...s2 };
             }
-        } anders {
+        } else {
             s3 = heatState(s2, target.T);
 
             if (s3.T > s2.T + EPS_T) {
                 pNE = mAir * (s3.h - s2.h);
                 requiredProcess.push(
-                    vorherige Kühlung
+                    previousCooling
                         ? "Nacherwärmen"
                         : "Heizen"
                 );
             }
         }
-    } anders {
+    } else {
         s3 = { ...s2 };
     }
 
@@ -1215,9 +1215,9 @@ Funktion simulateProcess(
 
     if (requiredProcess.length === 0) {
         requiredProcess.push(
-            Ziel erreicht
-                ? „Keine Luftbehandlung erforderlich“
-                : „Sollzustand mit der gewählten Betriebsart nicht erreichbar“
+            targetReached
+                ? "Keine Luftbehandlung erforderlich"
+                : "Sollzustand mit der gewählten Betriebsart nicht erreichbar"
         );
     }
 
@@ -1225,11 +1225,11 @@ Funktion simulateProcess(
     const rhoW = 1000;
 
     const waterFlow = (
-        Leistung,
+        power,
         deltaT
     ) =>
-        Leistung > 0 und DeltaT > 0
-            ? Leistung * 3600 /
+        power > 0 && deltaT > 0
+            ? power * 3600 /
                 (cpW * deltaT * rhoW)
             : 0;
 
@@ -1248,23 +1248,23 @@ Funktion simulateProcess(
         inputs.tKuehlR - inputs.tKuehlV
     );
 
-    zurückkehren {
-        Zustände: [außen, s1, s2, s3],
-        Endzustand,
-        Ziel,
-        Ziel erreicht,
+    return {
+        states: [outside, s1, s2, s3],
+        finalState,
+        target,
+        targetReached,
         requiredProcess: [...new Set(requiredProcess)],
-        Einschränkungen: [...neue Menge(Einschränkungen)],
-        Plausibilität,
+        limitations: [...new Set(limitations)],
+        plausibility,
         waterConfig: {
-            HeizungGültig: HeizungWasserGültig,
+            heatingValid: heatingWaterValid,
             coolingValid: coolingWaterValid
         },
-        Kräfte: {
+        powers: {
             pVE,
             pK,
             pNE,
-            Kondensat,
+            condensate,
             wvVE,
             wvK,
             wvNE
@@ -1275,12 +1275,12 @@ Funktion simulateProcess(
 
 /* =====================================================
    PROZESSSIMULATION
-   ======================================================= */
+   ===================================================== */
 
-Funktion simulateProcessLegacy(
-    draußen,
-    Ziel,
-    Eingaben
+function simulateProcessLegacy(
+    outside,
+    target,
+    inputs
 ) {
 
     const EPS_T = 0.05;
@@ -1291,34 +1291,34 @@ Funktion simulateProcessLegacy(
         Luftmassenstrom auf Basis
         der berechneten Außenluftdichte.
     */
-    Konstante mAir =
+    const mAir =
 
         inputs.volumenstrom *
 
-        außerhalb.rho /
+        outside.rho /
 
         3600;
 
 
     const needCooling =
 
-        außerhalb.T >
+        outside.T >
 
-        Ziel.T +
+        target.T +
 
         EPS_T;
 
 
-    Konstante Heizbedarf =
+    const needHeating =
 
-        außerhalb.T <
+        outside.T <
 
         target.T -
 
         EPS_T;
 
 
-    Konstante Entfeuchtungsbedarf =
+    const needDehum =
 
         outside.x >
 
@@ -1329,31 +1329,31 @@ Funktion simulateProcessLegacy(
 
     const needHum =
 
-        außerhalb.x <
+        outside.x <
 
         target.x -
 
         EPS_X;
 
 
-    sei s1 = {
-        ...draußen
+    let s1 = {
+        ...outside
     };
 
-    sei s2 = {
-        ...draußen
+    let s2 = {
+        ...outside
     };
 
-    sei s3 = {
-        ...draußen
+    let s3 = {
+        ...outside
     };
 
 
-    sei pVE = 0;
-    sei pK = 0;
-    sei pNE = 0;
+    let pVE = 0;
+    let pK = 0;
+    let pNE = 0;
 
-    Kondensat = 0;
+    let condensate = 0;
 
     let coolingTargetTemp = null;
 
@@ -1366,17 +1366,17 @@ Funktion simulateProcessLegacy(
     /*
         Betriebsmodi:
 
-        Heizen
+        heizen
         = keine Kühlung verfügbar
 
         kuehlen_sensibel
-        = nur vernünftige Kühlung,
+        = nur sensible Kühlung,
           keine aktive Entfeuchtung
 
         entfeuchten
         = Kühlung und Entfeuchtung möglich
     */
-    Konstante KühlungVerfügbar =
+    const coolingAvailable =
         inputs.betriebsmodus !==
         "heizen";
 
@@ -1388,16 +1388,16 @@ Funktion simulateProcessLegacy(
 
     /* =================================================
        1. VORERHITZER / FROSTSCHUTZ
-       ================================================== */
+       ================================================= */
 
-    Wenn (
+    if (
 
         inputs.heizkonzept ===
-        "Standard"
+        "standard"
 
         &&
 
-        außerhalb.T <
+        outside.T <
         inputs.tVEZiel -
         EPS_T
 
@@ -1442,7 +1442,7 @@ Funktion simulateProcessLegacy(
 
     /* =================================================
        2. KÜHLER
-       ================================================== */
+       ================================================= */
 
 
     /*
@@ -1454,20 +1454,20 @@ Funktion simulateProcessLegacy(
 
         x bleibt konstant.
 
-        Die relative Feuchte wird
+        Die resultierende relative Feuchte wird
         aus dem realen Zustand berechnet.
 
         Eine eventuell erforderliche Entfeuchtung
         wird nur als Hinweis angezeigt.
     */
-    Wenn (
+    if (
         inputs.betriebsmodus ===
         "kuehlen_sensibel"
     ) {
 
-        Wenn (
+        if (
             s1.T >
-            Ziel.T +
+            target.T +
             EPS_T
         ) {
 
@@ -1495,26 +1495,26 @@ Funktion simulateProcessLegacy(
                 );
 
 
-            Wenn (
-                Entfeuchtung erforderlich
+            if (
+                needDehum
             ) {
 
                 limitations.push(
-                    „Der gewünschte Feuchtezustand erfordert zusätzliche Entfeuchtung. Im Modus „Kühlen (sensibel)“ bleibt der Feuchtegehalt x unverändert.“
+                    "Der gewünschte Feuchtezustand erfordert zusätzlich Entfeuchtung. Im Modus „Kühlen (sensibel)“ bleibt der Feuchtegehalt x unverändert."
                 );
             }
 
 
-            Wenn (
+            if (
                 needHum
             ) {
 
                 limitations.push(
-                    „Der gewünschte Feuchtezustand würde zusätzlich eine Befeuchtung erfordern. Im Modus „Kühlen (sensibel)“ bleibt der Feuchtegehalt x unverändert.“
+                    "Der gewünschte Feuchtezustand würde zusätzlich eine Befeuchtung erfordern. Im Modus „Kühlen (sensibel)“ bleibt der Feuchtegehalt x unverändert."
                 );
             }
 
-        } anders {
+        } else {
 
             s2 = {
                 ...s1
@@ -1527,7 +1527,7 @@ Funktion simulateProcessLegacy(
         MODUS:
         KÜHLEN & ENTFEUCHTEN
     */
-    sonst wenn (
+    else if (
         inputs.betriebsmodus ===
         "entfeuchten"
     ) {
@@ -1537,8 +1537,8 @@ Funktion simulateProcessLegacy(
             auf den zur Sollfeuchte passenden
             Sättigungszustand kühlen.
         */
-        Wenn (
-            Entfeuchtung erforderlich
+        if (
+            needDehum
         ) {
 
             requiredProcess.push(
@@ -1547,7 +1547,7 @@ Funktion simulateProcessLegacy(
             );
 
 
-            Kühlungszieltemperatur =
+            coolingTargetTemp =
                 getSaturationTempForX(
                     target.x,
                     inputs.druck
@@ -1556,7 +1556,7 @@ Funktion simulateProcessLegacy(
 
             s2 =
                 createZustand(
-                    Kühlungszieltemperatur
+                    coolingTargetTemp,
                     100,
                     target.x,
                     inputs.druck
@@ -1573,7 +1573,7 @@ Funktion simulateProcessLegacy(
                 );
 
 
-            Kondensat =
+            condensate =
 
                 mAir *
 
@@ -1592,9 +1592,9 @@ Funktion simulateProcessLegacy(
             aber Temperatur muss sinken:
             rein sensibel kühlen.
         */
-        sonst wenn (
+        else if (
             s1.T >
-            Ziel.T +
+            target.T +
             EPS_T
         ) {
 
@@ -1622,30 +1622,30 @@ Funktion simulateProcessLegacy(
                 );
 
 
-            Wenn (
+            if (
                 needHum
             ) {
 
                 limitations.push(
-                    „Die Solltemperatur wird erreicht, der höhere gewünschte Feuchtegehalt würde jedoch eine Befeuchtung erfordern.“
+                    "Die Solltemperatur wird erreicht, der gewünschte höhere Feuchtegehalt würde jedoch eine Befeuchtung erfordern."
                 );
             }
         }
 
 
-        anders {
+        else {
 
             s2 = {
                 ...s1
             };
 
 
-            Wenn (
+            if (
                 needHum
             ) {
 
                 limitations.push(
-                    „Zur vollständigen Zielreichung wäre eine Befeuchtung erforderlich. Diese Funktion ist im aktuellen Anlagenmodell nicht enthalten.“
+                    "Zur vollständigen Zielerreichung wäre eine Befeuchtung erforderlich. Diese Funktion ist im aktuellen Anlagenmodell nicht enthalten."
                 );
             }
         }
@@ -1656,29 +1656,29 @@ Funktion simulateProcessLegacy(
         MODUS:
         NUR HEIZEN
     */
-    anders {
+    else {
 
         s2 = {
             ...s1
         };
 
 
-        Wenn (
-            Kühlung erforderlich
+        if (
+            needCooling
         ) {
 
             limitations.push(
-                „Kühlung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar.“
+                "Kühlung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar."
             );
         }
 
 
-        Wenn (
-            Entfeuchtung erforderlich
+        if (
+            needDehum
         ) {
 
             limitations.push(
-                „Entfeuchtung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar.“
+                "Entfeuchtung wäre erforderlich, ist im Betriebsmodus „Nur Heizen“ jedoch nicht verfügbar."
             );
         }
     }
@@ -1686,37 +1686,37 @@ Funktion simulateProcessLegacy(
 
     /* =================================================
        3. HEIZEN / NACHERWÄRMEN
-       ================================================== */
+       ================================================= */
 
 
     /*
-        Fällt in den Kühler-/Ausgangszustand
-        Die Temperatur unter Soll liegt.
+        Falls nach Kühler / Ausgangszustand
+        die Temperatur unter Soll liegt.
     */
-    Wenn (
+    if (
         s2.T <
         target.T -
         EPS_T
     ) {
 
         /*
-            Nach vorgekühlt /
+            Nach vorheriger Kühlung /
             Entfeuchtung = Nacherwärmung
         */
         const previousCooling =
             pK <
-            -0,01;
+            -0.01;
 
 
-        Wenn (
-            vorherige Kühlung
+        if (
+            previousCooling
         ) {
 
             requiredProcess.push(
                 "Nacherwärmen"
             );
 
-        } anders {
+        } else {
 
             requiredProcess.push(
                 "Heizen"
@@ -1724,9 +1724,9 @@ Funktion simulateProcessLegacy(
         }
 
 
-        Wenn (
+        if (
             inputs.heizkonzept ===
-            "Standard"
+            "standard"
         ) {
 
             s3 =
@@ -1747,14 +1747,14 @@ Funktion simulateProcessLegacy(
                     s2.h
                 );
 
-        } anders {
+        } else {
 
             /*
                 VE als Haupterhitzer:
                 Bei reinem Heizfall kann
                 direkt über VE geheizt werden.
             */
-            Wenn (
+            if (
                 !previousCooling
             ) {
 
@@ -1786,10 +1786,10 @@ Funktion simulateProcessLegacy(
                     ...s1
                 };
 
-            } anders {
+            } else {
 
                 limitations.push(
-                    „Nacherwärmung wäre erforderlich, ist in der gewählten Anlagenkonfiguration jedoch nicht verfügbar.“
+                    "Nacherwärmung wäre erforderlich, ist in der gewählten Anlagenkonfiguration jedoch nicht verfügbar."
                 );
 
 
@@ -1799,7 +1799,7 @@ Funktion simulateProcessLegacy(
             }
         }
 
-    } anders {
+    } else {
 
         s3 = {
             ...s2
@@ -1809,29 +1809,29 @@ Funktion simulateProcessLegacy(
 
     /* =================================================
        4. SONDERFALL REINER HEIZBETRIEB
-       ================================================== */
+       ================================================= */
 
-    Wenn (
+    if (
 
         inputs.betriebsmodus ===
         "heizen"
 
         &&
 
-        Heizung erforderlich
+        needHeating
 
     ) {
 
-        Wenn (
+        if (
             inputs.heizkonzept ===
-            "Standard"
+            "standard"
         ) {
 
             /*
                 Eventueller Frostschutz über VE
             */
-            Wenn (
-                außerhalb.T <
+            if (
+                outside.T <
                 inputs.tVEZiel -
                 EPS_T
             ) {
@@ -1854,10 +1854,10 @@ Funktion simulateProcessLegacy(
                         outside.h
                     );
 
-            } anders {
+            } else {
 
                 s1 = {
-                    ...draußen
+                    ...outside
                 };
             }
 
@@ -1886,7 +1886,7 @@ Funktion simulateProcessLegacy(
                 );
 
 
-            Wenn (
+            if (
                 !requiredProcess.includes(
                     "Heizen"
                 )
@@ -1897,7 +1897,7 @@ Funktion simulateProcessLegacy(
                 );
             }
 
-        } anders {
+        } else {
 
             s1 =
                 createZustand(
@@ -1928,7 +1928,7 @@ Funktion simulateProcessLegacy(
             };
 
 
-            Wenn (
+            if (
                 !requiredProcess.includes(
                     "Heizen"
                 )
@@ -1944,15 +1944,15 @@ Funktion simulateProcessLegacy(
 
     /* =================================================
        5. KEINE BEHANDLUNG
-       ================================================== */
+       ================================================= */
 
-    Wenn (
+    if (
         requiredProcess.length ===
         0
     ) {
 
         requiredProcess.push(
-            „Keine Luftbehandlung erforderlich“
+            "Keine Luftbehandlung erforderlich"
         );
     }
 
@@ -1965,7 +1965,7 @@ Funktion simulateProcessLegacy(
     /*
         Soll erreicht:
         Temperatur und Feuchtegehalt
-        müssen.
+        müssen übereinstimmen.
 
         Relative Feuchte ergibt sich
         automatisch daraus.
@@ -1976,7 +1976,7 @@ Funktion simulateProcessLegacy(
             finalState.T -
             target.T
         ) <=
-        0,15
+        0.15
 
         &&
 
@@ -1984,18 +1984,18 @@ Funktion simulateProcessLegacy(
             finalState.x -
             target.x
         ) <=
-        0,05;
+        0.05;
 
 
     /* =================================================
        6. WASSERVOLUMENSTRÖME
-       ================================================== */
+       ================================================= */
 
     const cpW = 4.187;
     const rhoW = 1000;
 
 
-    Konstante wvVE =
+    const wvVE =
 
         pVE >
         0
@@ -2026,7 +2026,7 @@ Funktion simulateProcessLegacy(
             0;
 
 
-    Konstante wvNE =
+    const wvNE =
 
         pNE >
         0
@@ -2091,17 +2091,17 @@ Funktion simulateProcessLegacy(
 
 
     /* =================================================
-       7. Plausibilität Kühlwasser
-       ================================================== */
+       7. PLAUSIBILITÄT KÜHLWASSER
+       ================================================= */
 
-    Wenn (
+    if (
 
         inputs.betriebsmodus ===
         "entfeuchten"
 
         &&
 
-        Entfeuchtung erforderlich
+        needDehum
 
         &&
 
@@ -2112,13 +2112,13 @@ Funktion simulateProcessLegacy(
 
         const margin =
 
-            Kühlungszieltemperatur -
+            coolingTargetTemp -
 
             inputs.tKuehlV;
 
 
-        Wenn (
-            Rand <= 0
+        if (
+            margin <= 0
         ) {
 
             plausibility.push(
@@ -2128,7 +2128,7 @@ Funktion simulateProcessLegacy(
             );
 
         } else if (
-            Rand <
+            margin <
             2
         ) {
 
@@ -2138,50 +2138,50 @@ Funktion simulateProcessLegacy(
 
             );
 
-        } anders {
+        } else {
 
             plausibility.push(
 
-                „ ✓ Kühlwasserniveau grundsätzlich plausibel. Die tatsächliche Erreichbarkeit hängt von Registerauslegung, Wärmeübergang und Bypass-Faktor ab.“
+                "✓ Kühlwasserniveau grundsätzlich plausibel. Die tatsächliche Erreichbarkeit hängt von Registerauslegung, Wärmeübergang und Bypass-Faktor ab."
 
             );
         }
     }
 
 
-    zurückkehren {
+    return {
 
-        Staaten: [
-            draußen,
+        states: [
+            outside,
             s1,
             s2,
             s3
         ],
 
-        Endzustand,
+        finalState,
 
-        Ziel,
+        target,
 
-        Ziel erreicht,
+        targetReached,
 
-        Erforderlicher Prozess:
+        requiredProcess:
             [
-                ...neues Set(
-                    erforderlicher Prozess
+                ...new Set(
+                    requiredProcess
                 )
             ],
 
-        Einschränkungen,
+        limitations,
 
-        Plausibilität,
+        plausibility,
 
-        Kräfte: {
+        powers: {
 
             pVE,
             pK,
             pNE,
 
-            Kondensat,
+            condensate,
 
             wvVE,
             wvK,
@@ -2193,27 +2193,27 @@ Funktion simulateProcessLegacy(
 
 /* =====================================================
    AUSGABE
-   ======================================================= */
+   ===================================================== */
 
 function updateUI(
-    Ergebnis,
-    Eingaben
+    result,
+    inputs
 ) {
 
     const f = (
-        Wert,
-        Ziffern = 1
+        value,
+        digits = 1
     ) => {
 
         return Number.isFinite(
-            Wert
+            value
         )
 
-            ? Wert
+            ? value
                 .toFixed(
-                    Ziffern
+                    digits
                 )
-                .ersetzen(
+                .replace(
                     ".",
                     ","
                 )
@@ -2224,13 +2224,13 @@ function updateUI(
 
     result.states.forEach(
         (
-            Zustand,
-            Index
+            state,
+            index
         ) => {
 
             setText(
                 `res-t-${index}`,
-                F(
+                f(
                     state.T,
                     1
                 )
@@ -2239,7 +2239,7 @@ function updateUI(
 
             setText(
                 `res-rh-${index}`,
-                F(
+                f(
                     state.rh,
                     1
                 )
@@ -2248,7 +2248,7 @@ function updateUI(
 
             setText(
                 `res-x-${index}`,
-                F(
+                f(
                     state.x,
                     2
                 )
@@ -2259,7 +2259,7 @@ function updateUI(
 
     setText(
         "res-td-0",
-        F(
+        f(
             result.states[0].td,
             1
         )
@@ -2267,8 +2267,8 @@ function updateUI(
 
 
     setText(
-        "Rest-t-Finale",
-        F(
+        "res-t-final",
+        f(
             result.finalState.T,
             1
         )
@@ -2277,7 +2277,7 @@ function updateUI(
 
     setText(
         "res-rh-final",
-        F(
+        f(
             result.finalState.rh,
             1
         )
@@ -2286,7 +2286,7 @@ function updateUI(
 
     setText(
         "res-x-final",
-        F(
+        f(
             result.finalState.x,
             2
         )
@@ -2295,7 +2295,7 @@ function updateUI(
 
     setText(
         "res-td-final",
-        F(
+        f(
             result.finalState.td,
             1
         )
@@ -2304,11 +2304,11 @@ function updateUI(
 
     setText(
 
-        "Ziellinie",
+        "target-line",
 
         `Soll: ${f(result.target.T, 1)} °C | ` +
 
-        `${f(result.target.rh, 1)} % rF | ` +
+        `${f(result.target.rh, 1)} % r.F. | ` +
 
         `x ${f(result.target.x, 2)} g/kg | ` +
 
@@ -2319,7 +2319,7 @@ function updateUI(
 
     setText(
         "res-p-ve",
-        F(
+        f(
             result.powers.pVE,
             2
         )
@@ -2327,8 +2327,8 @@ function updateUI(
 
 
     setText(
-        "res-pk",
-        F(
+        "res-p-k",
+        f(
             Math.abs(
                 result.powers.pK
             ),
@@ -2339,7 +2339,7 @@ function updateUI(
 
     setText(
         "res-p-ne",
-        F(
+        f(
             result.powers.pNE,
             2
         )
@@ -2348,7 +2348,7 @@ function updateUI(
 
     setText(
         "res-kondensat",
-        F(
+        f(
             result.powers.condensate,
             2
         )
@@ -2357,7 +2357,7 @@ function updateUI(
 
     setText(
         "res-wv-ve",
-        F(
+        f(
             result.powers.wvVE,
             2
         )
@@ -2366,7 +2366,7 @@ function updateUI(
 
     setText(
         "res-wv-k",
-        F(
+        f(
             result.powers.wvK,
             2
         )
@@ -2375,7 +2375,7 @@ function updateUI(
 
     setText(
         "res-wv-ne",
-        F(
+        f(
             result.powers.wvNE,
             2
         )
@@ -2424,7 +2424,7 @@ function updateUI(
         "summary-power-heat",
 
         `${f(
-            Gesamtwärme
+            totalHeat,
             2
         )} kW`
 
@@ -2447,7 +2447,7 @@ function updateUI(
 
     setText(
 
-        "Zusammenfassungskondensat",
+        "summary-condensate",
 
         `${f(
             result.powers.condensate,
@@ -2497,50 +2497,50 @@ function updateUI(
 
 
     updateVisuals(
-        Ergebnis
+        result
     );
 
 
     updateHints(
-        Ergebnis,
-        Eingaben
+        result,
+        inputs
     );
 
 
     updateSummary(
-        Ergebnis
+        result
     );
 }
 
 
 /* =====================================================
    PROZESSGRAFIK
-   ======================================================= */
+   ===================================================== */
 
 function updateVisuals(
-    Ergebnis
+    result
 ) {
 
-    Konst. Übersicht =
+    const overview =
         document.createElement(
             "div"
         );
 
 
-    Übersicht.Klassenname =
+    overview.className =
 
         `process-overview ${
 
             result.targetReached
 
-                "Prozess erfolgreich"
+                ? "process-ok"
 
-                : "Prozesswarnung"
+                : "process-warning"
 
         }`;
 
 
-    Übersicht.innerHTML =
+    overview.innerHTML =
 
         `<strong>${
 
@@ -2564,14 +2564,14 @@ function updateVisuals(
 
                 `<div class="overview-limitations">${
 
-                    Ergebnisbeschränkungen
+                    result.limitations
 
-                        .Karte(
-                            Text =>
+                        .map(
+                            text =>
                                 `⚠ ${escapeHtml(text)}`
                         )
 
-                        .verbinden(
+                        .join(
                             "<br>"
                         )
 
@@ -2586,7 +2586,7 @@ function updateVisuals(
 
     const container =
         document.getElementById(
-            "Prozessübersichtscontainer"
+            "process-overview-container"
         );
 
 
@@ -2594,7 +2594,7 @@ function updateVisuals(
 
 
     container.appendChild(
-        Überblick
+        overview
     );
 
 
@@ -2603,9 +2603,9 @@ function updateVisuals(
         "comp-ve",
 
         result.powers.pVE >
-        0,01,
+        0.01,
 
-        "Heizung"
+        "heating"
 
     );
 
@@ -2615,9 +2615,9 @@ function updateVisuals(
         "comp-k",
 
         result.powers.pK <
-        -0,01,
+        -0.01,
 
-        "Kühlung"
+        "cooling"
 
     );
 
@@ -2627,9 +2627,9 @@ function updateVisuals(
         "comp-ne",
 
         result.powers.pNE >
-        0,01,
+        0.01,
 
-        "Heizung"
+        "heating"
 
     );
 
@@ -2639,7 +2639,7 @@ function updateVisuals(
         "status-ve",
 
         result.powers.pVE >
-        0,01
+        0.01
 
             ? "aktiv"
 
@@ -2653,18 +2653,18 @@ function updateVisuals(
         "status-k",
 
         result.powers.pK <
-        -0,01
+        -0.01
 
             ?
 
             (
 
                 result.powers.condensate >
-                0,01
+                0.01
 
                     ? "Kühlen + Entfeuchten"
 
-                    "sensibel kühlen"
+                    : "sensibel kühlen"
 
             )
 
@@ -2684,7 +2684,7 @@ function updateVisuals(
         &&
 
         result.powers.pNE <=
-        0,01
+        0.01
 
         &&
 
@@ -2695,18 +2695,18 @@ function updateVisuals(
 
         "status-ne",
 
-        Nicht verfügbar
+        neUnavailable
 
             ?
 
-            „⚠ erforderlich, nicht verfügbar“
+            "⚠ erforderlich, nicht verfügbar"
 
             :
 
             (
 
                 result.powers.pNE >
-                0,01
+                0.01
 
                     ? "aktiv"
 
@@ -2717,25 +2717,25 @@ function updateVisuals(
     );
 
 
-    dokumentieren
+    document
         .getElementById(
             "comp-ne"
         )
         .classList.toggle(
-            "nicht verfügbar",
-            Nicht verfügbar
+            "unavailable",
+            neUnavailable
         );
 
 
     setNodeColor(
-        "Knoten-0",
-        "Quelle"
+        "node-0",
+        "source"
     );
 
 
     setNodeColor(
 
-        "Knoten-1",
+        "node-1",
 
         tempColor(
 
@@ -2749,7 +2749,7 @@ function updateVisuals(
 
     setNodeColor(
 
-        "Knoten-2",
+        "node-2",
 
         tempColor(
 
@@ -2763,7 +2763,7 @@ function updateVisuals(
 
     setNodeColor(
 
-        "Knoten-3",
+        "node-3",
 
         tempColor(
 
@@ -2778,7 +2778,7 @@ function updateVisuals(
     /*
         Der Zuluft-Endzustand erhält
         die Farbe entsprechend dem
-        letzter Realen Prozess.
+        letzten realen Prozess.
     */
     setNodeColor(
 
@@ -2797,40 +2797,40 @@ function updateVisuals(
 
 /* =====================================================
    BETRIEBSHINWEISE
-   ======================================================= */
+   ===================================================== */
 
-Funktion updateHints(
-    Ergebnis,
-    Eingaben
+function updateHints(
+    result,
+    inputs
 ) {
 
     const hints = [];
 
 
     const f =
-        Wert =>
+        value =>
 
-            Wert
+            value
 
                 .toFixed(1)
 
-                .ersetzen(
+                .replace(
                     ".",
                     ","
                 );
 
 
-    Wenn (
+    if (
         result.targetReached
     ) {
 
         hints.push(
 
-            „<strong> ✓ Zuluft-Sollzustand erreicht.</strong>“
+            "<strong>✓ Zuluft-Sollzustand erreicht.</strong>"
 
         );
 
-    } anders {
+    } else {
 
         hints.push(
 
@@ -2844,9 +2844,9 @@ Funktion updateHints(
 
     /*
         Zusätzliche, besonders verständliche
-        Feuchtebewertung bei vernünftiger Kühlung.
+        Feuchtebewertung bei sensibler Kühlung.
     */
-    Wenn (
+    if (
 
         inputs.betriebsmodus ===
         "kuehlen_sensibel"
@@ -2857,7 +2857,7 @@ Funktion updateHints(
             result.finalState.T -
             result.target.T
         ) <=
-        0,15
+        0.15
 
         &&
 
@@ -2865,30 +2865,30 @@ Funktion updateHints(
             result.finalState.rh -
             result.target.rh
         ) >
-        0,5
+        0.5
 
     ) {
 
-        Wenn (
+        if (
             result.finalState.rh >
             result.target.rh
         ) {
 
             hints.push(
 
-                `⚠ Die Solltemperatur wird erreicht, die relative Feuchte beträgt jedoch ${f(result.finalState.rh)} % statt ${f(result.target.rh)} %. ` +
+                `⚠ Die Solltemperatur wird erreicht, die resultierende relative Feuchte beträgt jedoch ${f(result.finalState.rh)} % statt ${f(result.target.rh)} %. ` +
 
-                „Für den gewünschten niedrigeren Feuchtewert wäre zusätzlich eine Entfeuchtung erforderlich.“
+                "Für den gewünschten niedrigeren Feuchtewert wäre zusätzlich eine Entfeuchtung erforderlich."
 
             );
 
-        } anders {
+        } else {
 
             hints.push(
 
-                `Hinweis: Die Solltemperatur wird erreicht, die relative Feuchte beträgt ${f(result.finalState.rh)} % statt ${f(result.target.rh)} %. ` +
+                `Hinweis: Die Solltemperatur wird erreicht, die resultierende relative Feuchte beträgt ${f(result.finalState.rh)} % statt ${f(result.target.rh)} %. ` +
 
-                „Für den gewünschten höheren Feuchtewert wäre zusätzlich eine Befeuchtung erforderlich.“
+                "Für den gewünschten höheren Feuchtewert wäre zusätzlich eine Befeuchtung erforderlich."
 
             );
         }
@@ -2896,16 +2896,16 @@ Funktion updateHints(
 
 
     /*
-        Mindesttemperatur bei vorgegebener Temperatur
+        Mindesttemperatur bei vorgegebener
         maximaler relativer Feuchte.
     */
-    Wenn (
+    if (
 
         result.finalState.rh >
 
         inputs.maxZuluftRh +
 
-        0,5
+        0.5
 
     ) {
 
@@ -2922,21 +2922,21 @@ Funktion updateHints(
             );
 
 
-        Wenn (
+        if (
 
             minT >
 
             result.finalState.T +
 
-            0,1
+            0.1
 
         ) {
 
             hints.push(
 
-                `Für höchstens ${inputs.maxZuluftRh.toFixed(0)} % rF müsste die Luft bei gleichem Feuchtegehalt auf mindestens ca. <strong>${f(minT)} °C</strong> erwärmt werden. ` +
+                `Für höchstens ${inputs.maxZuluftRh.toFixed(0)} % r.F. müsste die Luft bei gleichem Feuchtegehalt auf mindestens ca. <strong>${f(minT)} °C</strong> erwärmt werden. ` +
 
-                „Der Feuchtegehalt x und der Taupunkt bleiben dabei unverändert.“
+                "Der Feuchtegehalt x und der Taupunkt bleiben dabei unverändert."
 
             );
         }
@@ -2947,21 +2947,21 @@ Funktion updateHints(
         Optionale Taupunktreserve
         zur kritischen Oberfläche.
     */
-    Wenn (
+    if (
         Number.isFinite(
             inputs.kritischeOberflaeche
         )
     ) {
 
-        Konstante Reserve =
+        const reserve =
 
             inputs.kritischeOberflaeche -
 
             result.finalState.td;
 
 
-        Wenn (
-            Reserve <
+        if (
+            reserve <
             0
         ) {
 
@@ -2975,7 +2975,7 @@ Funktion updateHints(
 
         } else if (
 
-            Reserve <
+            reserve <
 
             inputs.taupunktReserve
 
@@ -2987,45 +2987,45 @@ Funktion updateHints(
 
             );
 
-        } anders {
+        } else {
 
             hints.push(
 
-                ` ✓ Taupunktreserve zur eingegebenen kritischen Oberfläche: ${f(reserve)} K.`
+                `✓ Taupunktreserve zur eingegebenen kritischen Oberfläche: ${f(reserve)} K.`
 
             );
         }
     }
 
 
-    dokumentieren
+    document
         .getElementById(
-            "Bedienungshinweise"
+            "operating-hints"
         )
         .innerHTML =
 
-        Hinweise
+        hints
 
-            .Karte(
-                Hinweis =>
+            .map(
+                hint =>
                     `<div class="hint-row">${hint}</div>`
             )
 
-            .verbinden("");
+            .join("");
 }
 
 
 /* =====================================================
    ZUSAMMENFASSUNG
-   ======================================================= */
+   ===================================================== */
 
-Funktion updateSummary(
-    Ergebnis
+function updateSummary(
+    result
 ) {
 
     setText(
 
-        "Zusammenfassungsprozess",
+        "summary-process",
 
         `Prozess: ${result.requiredProcess.join(" → ")}`
 
@@ -3045,128 +3045,128 @@ Funktion updateSummary(
 
             ? "✓ Zielzustand erreicht"
 
-            : „⚠ Zielzustand nicht vollständig erreicht“;
+            : "⚠ Zielzustand nicht vollständig erreicht";
 
 
     status.className =
 
         result.targetReached
 
-            ? "Bewertung OK"
+            ? "assessment-ok"
 
-            : "Bewertungswarnung";
+            : "assessment-warning";
 
 
     const notes = [
 
-        ...Ergebnis.Plausibilität,
+        ...result.plausibility,
 
         ...result.limitations.map(
-            Text =>
+            text =>
                 `⚠ ${text}`
         )
     ];
 
 
-    dokumentieren
+    document
         .getElementById(
-            "Zusammenfassung-Plausibilität"
+            "summary-plausibility"
         )
         .innerHTML =
 
-        Notizen.Länge
+        notes.length
 
             ?
 
-            Notizen
+            notes
 
-                .Karte(
+                .map(
                     escapeHtml
                 )
 
-                .verbinden(
+                .join(
                     "<br>"
                 )
 
             :
 
-            „ ✓ Keine besonderen Plausibilitätswarnungen.“;
+            "✓ Keine besonderen Plausibilitätswarnungen.";
 }
 
 
 /* =====================================================
    HILFSFUNKTIONEN
-   ======================================================= */
+   ===================================================== */
 
 function setComponentState(
-    Ausweis,
-    aktiv,
-    Typ
+    id,
+    active,
+    type
 ) {
 
     const node =
         document.getElementById(
-            Ausweis
+            id
         );
 
     if (!node) {
-        zurückkehren;
+        return;
     }
 
 
     node.classList.remove(
-        "aktive Heizung",
-        "aktive Kühlung"
-        "inaktiv"
+        "active-heating",
+        "active-cooling",
+        "inactive"
     );
 
 
     node.classList.add(
 
-        aktiv
+        active
 
             ?
 
             (
-                Typ ===
-                "Heizung"
+                type ===
+                "heating"
 
-                    ? "aktive Heizung"
+                    ? "active-heating"
 
-                    : "aktive Kühlung"
+                    : "active-cooling"
             )
 
             :
 
-            "inaktiv"
+            "inactive"
     );
 }
 
 
 function setNodeColor(
-    Ausweis,
-    Typ
+    id,
+    type
 ) {
 
     const node =
         document.getElementById(
-            Ausweis
+            id
         );
 
     if (!node) {
-        zurückkehren;
+        return;
     }
 
 
     node.classList.remove(
-        "Farbe-Rot",
-        "Farbe-Blau",
-        "Farbquelle"
+        "color-red",
+        "color-blue",
+        "color-source"
     );
 
 
-    Wenn (
-        Typ
+    if (
+        type
     ) {
 
         node.classList.add(
@@ -3176,36 +3176,36 @@ function setNodeColor(
 }
 
 
-Funktion tempColor(
-    Temperatur,
-    Basistemperatur
+function tempColor(
+    temperature,
+    baseTemperature
 ) {
 
-    Wenn (
+    if (
 
-        Temperatur >
+        temperature >
 
-        Basistemperatur +
+        baseTemperature +
 
-        0,1
+        0.1
 
     ) {
 
-        return "rot";
+        return "red";
     }
 
 
-    Wenn (
+    if (
 
-        Temperatur <
+        temperature <
 
-        Basistemperatur -
+        baseTemperature -
 
-        0,1
+        0.1
 
     ) {
 
-        Rückgabe "blau";
+        return "blue";
     }
 
 
@@ -3214,34 +3214,34 @@ Funktion tempColor(
 
 
 function setText(
-    Ausweis,
-    Wert
+    id,
+    value
 ) {
 
     const element =
         document.getElementById(
-            Ausweis
+            id
         );
 
 
-    Wenn (
-        Element
+    if (
+        element
     ) {
 
         element.textContent =
-            Wert;
+            value;
     }
 }
 
 
-Funktion signed(
-    Wert,
-    Ziffern
+function signed(
+    value,
+    digits
 ) {
 
-    zurückkehren (
+    return (
 
-        Wert >
+        value >
         0
 
             ? "+"
@@ -3252,28 +3252,28 @@ Funktion signed(
 
     +
 
-    Wert
+    value
 
         .toFixed(
-            Ziffern
+            digits
         )
 
-        .ersetzen(
+        .replace(
             ".",
             ","
         );
 }
 
 
-Funktion formatState(
-    Zustand
+function formatState(
+    state
 ) {
 
-    zurückkehren (
+    return (
 
         `${state.T.toFixed(1).replace(".", ",")} °C / ` +
 
-        `${state.rh.toFixed(1).replace(".", ",")} % rF / ` +
+        `${state.rh.toFixed(1).replace(".", ",")} % r.F. / ` +
 
         `x ${state.x.toFixed(2).replace(".", ",")} g/kg / ` +
 
@@ -3283,36 +3283,36 @@ Funktion formatState(
 }
 
 
-function escapeHml(
-    Wert
+function escapeHtml(
+    value
 ) {
 
     return String(
-        Wert
+        value
     )
 
         .replaceAll(
             "&",
-            "&Ampere;"
+            "&amp;"
         )
 
         .replaceAll(
             "<",
-            "<"
+            "&lt;"
         )
 
         .replaceAll(
             ">",
-            ">"
+            "&gt;"
         )
 
         .replaceAll(
             '"',
-            """
+            "&quot;"
         )
 
         .replaceAll(
             "'",
-            "'"
+            "&#039;"
         );
 }
