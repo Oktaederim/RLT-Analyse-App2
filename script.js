@@ -168,20 +168,14 @@ const clamp = (
 );
 
 
-const getSVP = T =>
+const getSVP = T => {
+    /* Über Wasser ab 0 °C, über Eis unter 0 °C.
+       Dadurch bleiben Winterzustände und Frostpunkte konsistent. */
+    const a = T < 0 ? 22.46 : 17.62;
+    const b = T < 0 ? 272.62 : 243.12;
 
-    6.112 *
-
-    Math.exp(
-        (
-            17.62 *
-            T
-        ) /
-        (
-            243.12 +
-            T
-        )
-    );
+    return 6.112 * Math.exp((a * T) / (b + T));
+};
 
 
 const getAbsFeuchte = (
@@ -283,30 +277,16 @@ const getTaupunkt = (
         return -273.15;
     }
 
-    const a = 17.62;
-    const b = 243.12;
+    const pv =
+        clamp(rh, 0.0001, 100) / 100 *
+        getSVP(T);
 
-    const alpha =
-
-        Math.log(
-            clamp(
-                rh,
-                0.0001,
-                100
-            ) /
-            100
-        )
-
-        +
-
-        (
-            a *
-            T
-        ) /
-        (
-            b +
-            T
-        );
+    /* Liegt der Dampfdruck unter dem Sättigungsdampfdruck bei
+       0 °C, wird die Umkehrung über Eis als Frostpunkt gerechnet. */
+    const overIce = pv < 6.112;
+    const a = overIce ? 22.46 : 17.62;
+    const b = overIce ? 272.62 : 243.12;
+    const alpha = Math.log(pv / 6.112);
 
     return (
         b *
@@ -579,12 +559,37 @@ function readNumber(
         : fallback;
 }
 
+function readBoundedNumber(
+    id,
+    fallback,
+    min,
+    max,
+    label,
+    issues
+) {
+    const element = document.getElementById(id);
+    const raw = element ? parseFloat(element.value) : NaN;
+
+    if (!Number.isFinite(raw)) {
+        issues.push(`${label}: keine gültige Zahl; Ersatzwert ${fallback} wird verwendet.`);
+        return fallback;
+    }
+
+    if (raw < min || raw > max) {
+        issues.push(`${label}: ${raw} liegt außerhalb des zulässigen Bereichs ${min} bis ${max}; für die Berechnung wird der nächstliegende Grenzwert verwendet.`);
+    }
+
+    return clamp(raw, min, max);
+}
+
 
 /* =====================================================
    HAUPTBERECHNUNG
    ===================================================== */
 
 function calculate() {
+
+    const inputIssues = [];
 
     const kritischeOberflaecheElement =
         document.getElementById(
@@ -611,29 +616,17 @@ function calculate() {
 
 
         tAussen:
-            readNumber(
-                "tempAussen",
-                20
-            ),
+            readBoundedNumber("tempAussen", 20, -50, 80, "Außentemperatur", inputIssues),
 
         rhAussen:
-            readNumber(
-                "rhAussen",
-                50
-            ),
+            readBoundedNumber("rhAussen", 50, 0, 100, "Relative Außenluftfeuchte", inputIssues),
 
 
         tZuluft:
-            readNumber(
-                "tempZuluft",
-                20
-            ),
+            readBoundedNumber("tempZuluft", 20, -50, 80, "Zulufttemperatur", inputIssues),
 
         rhZuluft:
-            readNumber(
-                "rhZuluft",
-                60
-            ),
+            readBoundedNumber("rhZuluft", 60, 0, 100, "Relative Zuluftfeuchte", inputIssues),
 
         xZuluft:
             readNumber(
@@ -653,13 +646,7 @@ function calculate() {
 
 
         druck:
-            Math.max(
-                100,
-                readNumber(
-                    "druck",
-                    1013.25
-                )
-            ),
+            readBoundedNumber("druck", 1013.25, 700, 1100, "Luftdruck", inputIssues),
 
 
         tVEZiel:
@@ -752,6 +739,8 @@ function calculate() {
 
                 : null
     };
+
+    inputs.inputIssues = inputIssues;
 
 
     const outside =
@@ -892,6 +881,14 @@ function simulateProcess(
     const requiredProcess = [];
     const limitations = [];
     const plausibility = [];
+
+    limitations.push(...(inputs.inputIssues || []));
+
+    if (inputs.volumenstrom <= 0) {
+        limitations.push(
+            "Keine thermodynamische Übertragung: Der Luft-Volumenstrom beträgt 0 m³/h."
+        );
+    }
 
     const heatingWaterValid =
         inputs.tHeizV > inputs.tHeizR;
@@ -1065,6 +1062,12 @@ function simulateProcess(
             s1 = heated;
             pVE = mAir * (s1.h - outside.h);
             requiredProcess.push("Vorerwärmen/Frostschutz");
+
+            if (inputs.tVEZiel > target.T + EPS_T) {
+                limitations.push(
+                    `Die Frostschutz-Zieltemperatur von ${inputs.tVEZiel.toFixed(1)} °C liegt über der gewünschten Zulufttemperatur von ${target.T.toFixed(1)} °C. Der Frostschutz begrenzt deshalb die erreichbare Zulufttemperatur nach unten. Abkühlung wäre nur mit einem nachgeschalteten Kühler möglich.`
+                );
+            }
         }
     }
 
@@ -1207,6 +1210,7 @@ function simulateProcess(
     }
 
     const targetReached =
+        inputs.volumenstrom > 0 &&
         Math.abs(finalState.T - target.T) <= 0.15 &&
         Math.abs(finalState.x - target.x) <= 0.05;
 
@@ -2309,7 +2313,7 @@ function updateUI(
 
         `x ${f(result.target.x, 2)} g/kg | ` +
 
-        `Td ${f(result.target.td, 1)} °C`
+        `${result.target.td < 0 ? "Fp" : "Td"} ${f(result.target.td, 1)} °C`
 
     );
 
@@ -3266,6 +3270,8 @@ function formatState(
     state
 ) {
 
+    const pointLabel = state.td < 0 ? "Fp" : "Td";
+
     return (
 
         `${state.T.toFixed(1).replace(".", ",")} °C / ` +
@@ -3274,7 +3280,7 @@ function formatState(
 
         `x ${state.x.toFixed(2).replace(".", ",")} g/kg / ` +
 
-        `Td ${state.td.toFixed(1).replace(".", ",")} °C`
+        `${pointLabel} ${state.td.toFixed(1).replace(".", ",")} °C`
 
     );
 }
