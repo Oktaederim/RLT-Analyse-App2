@@ -6,25 +6,18 @@
     <title>RLT-Rechner (Profi-Version)</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 <div class="container">
     <header>
         <h1>🌬️ RLT-Rechner (Profi-Version)</h1>
-        <p class="subtitle">
-            Analyse von Anlagenprozessen und Luftzuständen
-        </p>
+        <p class="subtitle">Analyse von Anlagenprozessen und Luftzuständen</p>
     </header>
 
     <main>
         <section class="card">
             <div class="card-header">
                 <h2>Anlagenkonfiguration</h2>
-
-                <button
-                    id="resetBtn"
-                    title="Alle Werte auf Standard zurücksetzen"
-                >
+                <button id="resetBtn" title="Alle Werte auf Standard zurücksetzen">
                     ⟲ Reset
                 </button>
             </div>
@@ -33,58 +26,31 @@
                 <div class="grid-container config-top-grid">
                     <div>
                         <h4>Betriebsmodus</h4>
-
                         <div class="radio-group">
                             <label>
-                                <input
-                                    type="radio"
-                                    name="betriebsmodus"
-                                    value="heizen"
-                                >
+                                <input type="radio" name="betriebsmodus" value="heizen">
                                 Nur Heizen
                             </label>
-
                             <label>
-                                <input
-                                    type="radio"
-                                    name="betriebsmodus"
-                                    value="kuehlen_sensibel"
-                                >
+                                <input type="radio" name="betriebsmodus" value="kuehlen_sensibel">
                                 Kühlen (sensibel)
                             </label>
-
                             <label>
-                                <input
-                                    type="radio"
-                                    name="betriebsmodus"
-                                    value="entfeuchten"
-                                    checked
-                                >
-                                Kühlen &amp; Entfeuchten
+                                <input type="radio" name="betriebsmodus" value="entfeuchten" checked>
+                                Kühlen & Entfeuchten
                             </label>
                         </div>
                     </div>
 
                     <div>
                         <h4>Heizkonzept</h4>
-
                         <div class="radio-group">
                             <label>
-                                <input
-                                    type="radio"
-                                    name="heizkonzept"
-                                    value="standard"
-                                    checked
-                                >
+                                <input type="radio" name="heizkonzept" value="standard" checked>
                                 Standard (NE Haupterhitzer)
                             </label>
-
                             <label>
-                                <input
-                                    type="radio"
-                                    name="heizkonzept"
-                                    value="ve_hauptleistung"
-                                >
+                                <input type="radio" name="heizkonzept" value="ve_hauptleistung">
                                 VE als Haupterhitzer
                             </label>
                         </div>
@@ -99,31 +65,13 @@
                     <h4>🌍 Außenluft</h4>
 
                     <div class="input-group">
-                        <label for="tempAussen">
-                            Temperatur (°C)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="tempAussen"
-                            value="20.0"
-                            step="0.1"
-                        >
+                        <label for="tempAussen">Temperatur (°C)</label>
+                        <input type="number" id="tempAussen" value="20.0" step="0.1">
                     </div>
 
                     <div class="input-group">
-                        <label for="rhAussen">
-                            Relative Feuchte (%)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="rhAussen"
-                            value="50.0"
-                            step="0.1"
-                            min="0"
-                            max="100"
-                        >
+                        <label for="rhAussen">Relative Feuchte (%)</label>
+                        <input type="number" id="rhAussen" value="50.0" step="0.1" min="0" max="100">
                     </div>
                 </div>
 
@@ -135,72 +83,33 @@
 
                         <div class="radio-group inset-radio-group">
                             <label>
-                                <input
-                                    type="radio"
-                                    name="regelungsart"
-                                    value="trh"
-                                    checked
-                                >
-                                Temp. &amp; r.F.-geführt
+                                <input type="radio" name="regelungsart" value="trh" checked>
+                                Temp. & r.F.-geführt
                             </label>
 
                             <label>
-                                <input
-                                    type="radio"
-                                    name="regelungsart"
-                                    value="x"
-                                >
+                                <input type="radio" name="regelungsart" value="x">
                                 abs. Feuchte-geführt
                             </label>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="tempZuluft">
-                            Temperatur (°C)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="tempZuluft"
-                            value="20.0"
-                            step="0.1"
-                        >
+                        <label for="tempZuluft">Temperatur (°C)</label>
+                        <input type="number" id="tempZuluft" value="20.0" step="0.1">
                     </div>
 
                     <div id="zuluft-trh-wrapper">
                         <div class="input-group">
-                            <label for="rhZuluft">
-                                Relative Feuchte (%)
-                            </label>
-
-                            <input
-                                type="number"
-                                id="rhZuluft"
-                                value="60.0"
-                                step="0.1"
-                                min="0"
-                                max="100"
-                            >
+                            <label for="rhZuluft">Relative Feuchte (%)</label>
+                            <input type="number" id="rhZuluft" value="60.0" step="0.1" min="0" max="100">
                         </div>
                     </div>
 
-                    <div
-                        id="zuluft-x-wrapper"
-                        class="hidden"
-                    >
+                    <div id="zuluft-x-wrapper" class="hidden">
                         <div class="input-group">
-                            <label for="xZuluft">
-                                Absolute Feuchte (g/kg)
-                            </label>
-
-                            <input
-                                type="number"
-                                id="xZuluft"
-                                value="7.0"
-                                step="0.1"
-                                min="0"
-                            >
+                            <label for="xZuluft">Absolute Feuchte (g/kg)</label>
+                            <input type="number" id="xZuluft" value="7.0" step="0.1" min="0">
 
                             <span class="calculated-rh-display">
                                 ergibt:
@@ -215,46 +124,18 @@
                     <h4>🔧 Anlagenparameter</h4>
 
                     <div class="input-group">
-                        <label for="volumenstrom">
-                            Luft-Volumenstrom (m³/h)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="volumenstrom"
-                            value="5000"
-                            step="50"
-                            min="0"
-                        >
+                        <label for="volumenstrom">Luft-Volumenstrom (m³/h)</label>
+                        <input type="number" id="volumenstrom" value="5000" step="50" min="0">
                     </div>
 
                     <div class="input-group">
-                        <label for="druck">
-                            Luftdruck (hPa)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="druck"
-                            value="1013.25"
-                            step="0.1"
-                        >
+                        <label for="druck">Luftdruck (hPa)</label>
+                        <input type="number" id="druck" value="1013.25" step="0.1">
                     </div>
 
-                    <div
-                        class="input-group"
-                        id="veZielTempWrapper"
-                    >
-                        <label for="tempVEZiel">
-                            VE Frostschutz-Zieltemp. (°C)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="tempVEZiel"
-                            value="5.0"
-                            step="0.1"
-                        >
+                    <div class="input-group" id="veZielTempWrapper">
+                        <label for="tempVEZiel">VE Frostschutz-Zieltemp. (°C)</label>
+                        <input type="number" id="tempVEZiel" value="5.0" step="0.1">
                     </div>
                 </div>
             </div>
@@ -263,49 +144,20 @@
 
             <div class="grid-container water-temp-grid">
                 <div class="input-group-inline">
-                    <label>
-                        Heizwasser T (°C V/R)
-                    </label>
+                    <label>Heizwasser T (°C V/R)</label>
 
                     <div>
-                        <input
-                            type="number"
-                            id="tempHeizVorlauf"
-                            value="70"
-                            step="1"
-                        >
-
-                        <input
-                            type="number"
-                            id="tempHeizRuecklauf"
-                            value="50"
-                            step="1"
-                        >
+                        <input type="number" id="tempHeizVorlauf" value="70" step="1">
+                        <input type="number" id="tempHeizRuecklauf" value="50" step="1">
                     </div>
                 </div>
 
-                <div
-                    class="input-group-inline"
-                    id="kuehlwasserWrapper"
-                >
-                    <label>
-                        Kühlwasser T (°C V/R)
-                    </label>
+                <div class="input-group-inline" id="kuehlwasserWrapper">
+                    <label>Kühlwasser T (°C V/R)</label>
 
                     <div>
-                        <input
-                            type="number"
-                            id="tempKuehlVorlauf"
-                            value="8"
-                            step="1"
-                        >
-
-                        <input
-                            type="number"
-                            id="tempKuehlRuecklauf"
-                            value="13"
-                            step="1"
-                        >
+                        <input type="number" id="tempKuehlVorlauf" value="8" step="1">
+                        <input type="number" id="tempKuehlRuecklauf" value="13" step="1">
                     </div>
                 </div>
             </div>
@@ -318,7 +170,6 @@
                         <label for="maxZuluftRh">
                             Max. gewünschte Zuluft-r.F. für Hinweis (%)
                         </label>
-
                         <input
                             type="number"
                             id="maxZuluftRh"
@@ -333,7 +184,6 @@
                         <label for="kritischeOberflaeche">
                             Kritische Oberflächentemperatur (°C, optional)
                         </label>
-
                         <input
                             type="number"
                             id="kritischeOberflaeche"
@@ -346,7 +196,6 @@
                         <label for="taupunktReserve">
                             Gewünschte Taupunktreserve (K)
                         </label>
-
                         <input
                             type="number"
                             id="taupunktReserve"
@@ -360,7 +209,6 @@
                         <label for="kuehlApproach">
                             Mindestabstand Kühlwasser-Vorlauf / Luft (K)
                         </label>
-
                         <input
                             type="number"
                             id="kuehlApproach"
@@ -374,7 +222,6 @@
                         <label for="heizApproach">
                             Mindestabstand Heizwasser-Vorlauf / Luft (K)
                         </label>
-
                         <input
                             type="number"
                             id="heizApproach"
@@ -387,20 +234,14 @@
             </details>
         </section>
 
-        <section
-            class="card"
-            id="results-card"
-        >
-            <h2>Anlagenprozess &amp; Zustände</h2>
+        <section class="card" id="results-card">
+            <h2>Anlagenprozess & Zustände</h2>
 
             <div id="process-overview-container"></div>
 
             <div class="process-flow-container">
                 <div class="process-column">
-                    <div
-                        class="state-node source-state"
-                        id="node-0"
-                    >
+                    <div class="state-node source-state" id="node-0">
                         <h4>Außenluft</h4>
                         <p>T: <span id="res-t-0">--</span> °C</p>
                         <p>r.F.: <span id="res-rh-0">--</span> %</p>
@@ -412,24 +253,15 @@
                 <div class="arrow">→</div>
 
                 <div class="process-column">
-                    <div
-                        class="component-node"
-                        id="comp-ve"
-                    >
+                    <div class="component-node" id="comp-ve">
                         <h5>Vorerhitzer</h5>
                         <p>P: <span id="res-p-ve">0,00</span> kW</p>
                         <p>HW: <span id="res-hw-ve">--</span> °C V/R</p>
                         <p>💧 <span id="res-wv-ve">0,00</span> m³/h</p>
-                        <p
-                            class="status-line"
-                            id="status-ve"
-                        ></p>
+                        <p class="status-line" id="status-ve"></p>
                     </div>
 
-                    <div
-                        class="state-node"
-                        id="node-1"
-                    >
+                    <div class="state-node" id="node-1">
                         <p>T: <span id="res-t-1">--</span> °C</p>
                         <p>r.F.: <span id="res-rh-1">--</span> %</p>
                         <p>x: <span id="res-x-1">--</span> g/kg</p>
@@ -439,25 +271,16 @@
                 <div class="arrow">→</div>
 
                 <div class="process-column">
-                    <div
-                        class="component-node"
-                        id="comp-k"
-                    >
+                    <div class="component-node" id="comp-k">
                         <h5>Kühler</h5>
                         <p>P: <span id="res-p-k">0,00</span> kW</p>
                         <p>KW: <span id="res-kw-k">--</span> °C V/R</p>
                         <p>💧 <span id="res-wv-k">0,00</span> m³/h</p>
                         <p>💧❄️ <span id="res-kondensat">0,00</span> kg/h</p>
-                        <p
-                            class="status-line"
-                            id="status-k"
-                        ></p>
+                        <p class="status-line" id="status-k"></p>
                     </div>
 
-                    <div
-                        class="state-node"
-                        id="node-2"
-                    >
+                    <div class="state-node" id="node-2">
                         <p>T: <span id="res-t-2">--</span> °C</p>
                         <p>r.F.: <span id="res-rh-2">--</span> %</p>
                         <p>x: <span id="res-x-2">--</span> g/kg</p>
@@ -467,24 +290,15 @@
                 <div class="arrow">→</div>
 
                 <div class="process-column">
-                    <div
-                        class="component-node"
-                        id="comp-ne"
-                    >
+                    <div class="component-node" id="comp-ne">
                         <h5>Nacherhitzer</h5>
                         <p>P: <span id="res-p-ne">0,00</span> kW</p>
                         <p>HW: <span id="res-hw-ne">--</span> °C V/R</p>
                         <p>💧 <span id="res-wv-ne">0,00</span> m³/h</p>
-                        <p
-                            class="status-line"
-                            id="status-ne"
-                        ></p>
+                        <p class="status-line" id="status-ne"></p>
                     </div>
 
-                    <div
-                        class="state-node"
-                        id="node-3"
-                    >
+                    <div class="state-node" id="node-3">
                         <p>T: <span id="res-t-3">--</span> °C</p>
                         <p>r.F.: <span id="res-rh-3">--</span> %</p>
                         <p>x: <span id="res-x-3">--</span> g/kg</p>
@@ -494,10 +308,7 @@
                 <div class="arrow equals">→</div>
 
                 <div class="process-column">
-                    <div
-                        class="state-node final-state"
-                        id="node-final"
-                    >
+                    <div class="state-node final-state" id="node-final">
                         <h4>Zuluft (erreichbar)</h4>
 
                         <p>T: <span id="res-t-final">--</span> °C</p>
@@ -505,24 +316,18 @@
                         <p>x: <span id="res-x-final">--</span> g/kg</p>
                         <p>Td/Fp: <span id="res-td-final">--</span> °C</p>
 
-                        <p
-                            class="target-line"
-                            id="target-line"
-                        >
+                        <p class="target-line" id="target-line">
                             Soll: --
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div
-                id="operating-hints"
-                class="operating-hints"
-            ></div>
+            <div id="operating-hints" class="operating-hints"></div>
 
             <hr>
 
-            <h3>Zusammenfassung &amp; Vergleich</h3>
+            <h3>Zusammenfassung & Vergleich</h3>
 
             <div class="summary-grid">
                 <div class="power-summary">
@@ -530,29 +335,20 @@
 
                     <p>
                         <span>Gesamtleistung Wärme:</span>
-
-                        <strong
-                            id="summary-power-heat"
-                            class="power-heat"
-                        >
+                        <strong id="summary-power-heat" class="power-heat">
                             0,00 kW
                         </strong>
                     </p>
 
                     <p>
                         <span>Gesamtleistung Kälte:</span>
-
-                        <strong
-                            id="summary-power-cool"
-                            class="power-cool"
-                        >
+                        <strong id="summary-power-cool" class="power-cool">
                             0,00 kW
                         </strong>
                     </p>
 
                     <p>
                         <span>Kondensat:</span>
-
                         <strong id="summary-condensate">
                             0,00 kg/h
                         </strong>
@@ -561,6 +357,26 @@
 
                 <div class="comparison-summary">
                     <h4>Außenluft → Zuluft</h4>
+
+                    <p>
+                        <span>Enthalpie Außenluft:</span>
+                        <strong id="summary-h-outside">-- kJ/kg</strong>
+                    </p>
+
+                    <p>
+                        <span>Enthalpie Zuluft:</span>
+                        <strong id="summary-h-supply">-- kJ/kg</strong>
+                    </p>
+
+                    <p>
+                        <span>Δh:</span>
+                        <strong id="summary-delta-h">-- kJ/kg</strong>
+                    </p>
+
+                    <p>
+                        <span>Energetische Wirkung:</span>
+                        <strong id="summary-energy-direction">--</strong>
+                    </p>
 
                     <p>
                         <span>ΔT:</span>
@@ -589,9 +405,7 @@
         </section>
 
         <details class="info-box">
-            <summary>
-                Über diesen Rechner &amp; Berechnungsgrundlagen
-            </summary>
+            <summary>Über diesen Rechner & Berechnungsgrundlagen</summary>
 
             <div class="info-content">
                 <p>
@@ -606,32 +420,21 @@
                 <h4>Wesentliche Luftzustandsgrößen</h4>
 
                 <ul>
+                    <li><strong>T:</strong> Lufttemperatur in °C.</li>
+                    <li><strong>r.F.:</strong> relative Feuchte in %.</li>
                     <li>
-                        <strong>T:</strong>
-                        Lufttemperatur in °C.
+                        <strong>x:</strong> Feuchtegehalt in g Wasserdampf
+                        je kg trockener Luft.
                     </li>
-
                     <li>
-                        <strong>r.F.:</strong>
-                        relative Feuchte in %.
+                        <strong>h:</strong> spezifische Enthalpie der
+                        feuchten Luft in kJ/kg trockener Luft.
                     </li>
-
                     <li>
-                        <strong>x:</strong>
-                        Feuchtegehalt in g Wasserdampf je kg trockener Luft.
-                    </li>
-
-                    <li>
-                        <strong>h:</strong>
-                        spezifische Enthalpie der feuchten Luft in kJ/kg
-                        trockener Luft.
-                    </li>
-
-                    <li>
-                        <strong>Td/Fp:</strong>
-                        Taupunkt über Wasser bzw. Frostpunkt über Eis. Er
-                        kennzeichnet die Temperatur, bei der die Luft bei
-                        unverändertem Feuchtegehalt gesättigt wäre.
+                        <strong>Td/Fp:</strong> Taupunkt über Wasser bzw.
+                        Frostpunkt über Eis. Er kennzeichnet die Temperatur,
+                        bei der die Luft bei unverändertem Feuchtegehalt
+                        gesättigt wäre.
                     </li>
                 </ul>
 
@@ -651,12 +454,12 @@
 
                 <p>
                     Der Taupunkt des gewünschten Luftzustands ist
-                    <strong>nicht</strong>
-                    mit der notwendigen Kühlwassertemperatur gleichzusetzen.
-                    Zur realen Entfeuchtung muss die wirksame
-                    Registeroberfläche unterhalb des erforderlichen Taupunkts
-                    liegen. Die erforderliche Kühlwassertemperatur hängt von
-                    der konkreten Registerauslegung, dem Wärmeübergang und dem
+                    <strong>nicht</strong> mit der notwendigen
+                    Kühlwassertemperatur gleichzusetzen. Zur realen
+                    Entfeuchtung muss die wirksame Registeroberfläche
+                    unterhalb des erforderlichen Taupunkts liegen.
+                    Die erforderliche Kühlwassertemperatur hängt von der
+                    konkreten Registerauslegung, dem Wärmeübergang und dem
                     Bypass-Faktor ab.
                 </p>
 
@@ -688,24 +491,61 @@
                         Näherung nach Magnus; unter 0 °C mit Koeffizienten
                         für die Sättigung über Eis.
                     </li>
-
                     <li>
                         <strong>Psychrometrische Größen:</strong>
                         Standardbeziehungen für feuchte Luft.
                     </li>
-
                     <li>
                         <strong>Leistungen:</strong>
-                        überschlägige Energiebilanzen aus Luftmassenstrom
-                        und Enthalpiedifferenzen.
+                        überschlägige Energiebilanzen aus dem Massenstrom
+                        trockener Luft und den Enthalpiedifferenzen. Der
+                        eingegebene Luftvolumenstrom wird dazu mit der
+                        berechneten Dichte der Außenluft in einen
+                        Luftmassenstrom umgerechnet.
                     </li>
-
                     <li>
                         <strong>Wasservolumenströme:</strong>
-                        überschlägig aus Leistung und eingestellter
-                        Vor-/Rücklauftemperatur.
+                        überschlägig aus Registerleistung, eingestellter
+                        Vor-/Rücklauftemperatur und einer vereinfachten
+                        Wärmekapazität von Wasser. Glykolanteile,
+                        temperaturabhängige Stoffwerte und hydraulische
+                        Verluste werden nicht berücksichtigt.
                     </li>
                 </ul>
+
+                <h4>Enthalpie und energetische Bewertung</h4>
+
+                <p>
+                    Die Enthalpie h beschreibt den gesamten Energieinhalt
+                    der feuchten Luft aus fühlbarer Wärme und dem
+                    Energieanteil des Wasserdampfs. Die Differenz Δh zeigt
+                    die energetische Nettoänderung von der Außenluft zur
+                    erreichbaren Zuluft. Ein negativer Wert bedeutet
+                    Energieabfuhr aus der Luft, ein positiver Wert
+                    Energiezufuhr zur Luft.
+                </p>
+
+                <p>
+                    Die Nettoänderung Δh ist nicht mit der Summe der
+                    einzelnen Registerleistungen gleichzusetzen. Bei
+                    Entfeuchtung mit anschließender Nacherwärmung werden
+                    Kälte- und Wärmeleistung deshalb getrennt ausgewiesen.
+                    Eine Wärme- oder Kühlleistung der Zuluft gegenüber einem
+                    Raum kann ohne Eingabe des Raumluftzustands nicht
+                    bestimmt werden.
+                </p>
+
+                <h4>Vereinfachungen des Anlagenmodells</h4>
+
+                <p>
+                    Bei einer Taupunktunterschreitung wird der
+                    Kühleraustritt vereinfacht als gesättigter Luftzustand
+                    angenommen. Bypass-Faktor, Kontaktfaktor,
+                    Ventilatorerwärmung, Wärmeverluste und reale
+                    Registerkennlinien werden nicht berücksichtigt. Die
+                    Ergebnisse sind daher überschlägige Rechenwerte und
+                    keine Auslegungsdaten eines Registerherstellers.
+                </p>
 
                 <p>
                     <strong>Hinweis:</strong>
